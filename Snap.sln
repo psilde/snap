@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D487898F-7CC9-420D-9D55-F9A14EA0C42E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap", "src\Snap\Snap.csproj", "{E4FCF186-682F-4581-BBA6-4006C496694F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B72DB897-D532-437F-AE97-58BB4344E03F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap.Tests", "tests\Snap.Tests\Snap.Tests.csproj", "{0C621617-AA46-4A02-89ED-6343CEB8369F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E4FCF186-682F-4581-BBA6-4006C496694F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4FCF186-682F-4581-BBA6-4006C496694F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4FCF186-682F-4581-BBA6-4006C496694F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4FCF186-682F-4581-BBA6-4006C496694F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C621617-AA46-4A02-89ED-6343CEB8369F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C621617-AA46-4A02-89ED-6343CEB8369F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C621617-AA46-4A02-89ED-6343CEB8369F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C621617-AA46-4A02-89ED-6343CEB8369F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E4FCF186-682F-4581-BBA6-4006C496694F} = {D487898F-7CC9-420D-9D55-F9A14EA0C42E}
+		{0C621617-AA46-4A02-89ED-6343CEB8369F} = {B72DB897-D532-437F-AE97-58BB4344E03F}
+	EndGlobalSection
+EndGlobal
