@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<polygon points="24,24 78,24 78,40 40,40 40,78 24,78" fill="#F4C876"></polygon>
+<polygon points="176,24 122,24 122,40 160,40 160,78 176,78" fill="#E8A93D"></polygon>
+<polygon points="24,176 78,176 78,160 40,160 40,122 24,122" fill="#E8A93D"></polygon>
+<polygon points="176,176 122,176 122,160 160,160 160,122 176,122" fill="#B87F1F"></polygon>
+<path d="M100,100 L100,78 A22,22 0 0 1 122,100 Z" fill="#FCE7BE"></path>
+<path d="M100,100 L122,100 A22,22 0 0 1 100,122 Z" fill="#E8A93D"></path>
+<path d="M100,100 L100,122 A22,22 0 0 1 78,100 Z" fill="#B87F1F"></path>
+<path d="M100,100 L78,100 A22,22 0 0 1 100,78 Z" fill="#F4C876"></path></svg>
