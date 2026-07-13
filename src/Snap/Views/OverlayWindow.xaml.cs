@@ -49,6 +49,8 @@ public partial class OverlayWindow : Window
         MouseLeftButtonDown += OverlayWindow_MouseLeftButtonDown;
         MouseMove += OverlayWindow_MouseMove;
         MouseLeftButtonUp += OverlayWindow_MouseLeftButtonUp;
+
+        _blurHistory = new BlurHistory(BlurBoxes);
     }
 
     private void OverlayWindow_Loaded(object sender, RoutedEventArgs e)
@@ -152,6 +154,8 @@ public partial class OverlayWindow : Window
 
     private CaptureToolbar? _toolbar;
     protected readonly List<BlurBox> BlurBoxes = new();
+    private readonly BlurHistory _blurHistory;
+    private readonly Dictionary<BlurBox, System.Windows.Controls.Image> _blurVisuals = new();
 
     private bool _blurModeArmed;
     private bool _isDraggingBlurBox;
@@ -274,7 +278,6 @@ public partial class OverlayWindow : Window
         var rect = NormalizeRect(_blurDragStart, end);
         RootCanvas.Children.Remove(_pendingBlurRect);
         _pendingBlurRect = null;
-        _blurModeArmed = false;
 
         var selectionRect = new Rect(Selection.X, Selection.Y, Selection.Width, Selection.Height);
         rect.Intersect(selectionRect);
@@ -293,12 +296,14 @@ public partial class OverlayWindow : Window
             Radius = 12
         };
 
-        BlurBoxes.Add(box);
-        RenderBlurBox(box, rect);
+        _blurHistory.RecordAdd(box);
+        RenderBlurBox(box);
     }
 
-    private void RenderBlurBox(BlurBox box, Rect screenRect)
+    private void RenderBlurBox(BlurBox box)
     {
+        var screenRect = new Rect(Selection.X + box.X, Selection.Y + box.Y, box.Width, box.Height);
+
         using var regionCrop = BitmapUtil.Crop(FullCapture, new Rectangle(Selection.X, Selection.Y, Selection.Width, Selection.Height));
         using var blurred = BlurService.ApplyBlur(regionCrop, box.ToRectangle(), box.Radius);
         using var boxCrop = BitmapUtil.Crop(blurred, box.ToRectangle());
@@ -313,21 +318,60 @@ public partial class OverlayWindow : Window
         preview.MouseWheel += (_, args) =>
         {
             box.Radius = Math.Clamp(box.Radius + (args.Delta > 0 ? 2 : -2), 1, 40);
-            RootCanvas.Children.Remove(preview);
-            RenderBlurBox(box, screenRect);
+            RemoveBlurVisual(box);
+            RenderBlurBox(box);
             args.Handled = true;
         };
 
         preview.MouseRightButtonDown += (_, args) =>
         {
-            BlurBoxes.Remove(box);
-            RootCanvas.Children.Remove(preview);
+            _blurHistory.RecordRemove(box);
+            RemoveBlurVisual(box);
             args.Handled = true;
         };
 
         Canvas.SetLeft(preview, screenRect.X);
         Canvas.SetTop(preview, screenRect.Y);
         RootCanvas.Children.Add(preview);
+        _blurVisuals[box] = preview;
+    }
+
+    private void RemoveBlurVisual(BlurBox box)
+    {
+        if (_blurVisuals.Remove(box, out var preview))
+        {
+            RootCanvas.Children.Remove(preview);
+        }
+    }
+
+    private void UndoBlur()
+    {
+        var change = _blurHistory.Undo();
+        if (change is not null)
+        {
+            ApplyHistoryChange(change);
+        }
+    }
+
+    private void RedoBlur()
+    {
+        var change = _blurHistory.Redo();
+        if (change is not null)
+        {
+            ApplyHistoryChange(change);
+        }
+    }
+
+    private void ApplyHistoryChange(BlurHistoryChange change)
+    {
+        if (change.IsPresentAfter)
+        {
+            RenderBlurBox(change.Box);
+        }
+        else
+        {
+            RemoveBlurVisual(change.Box);
+        }
     }
 
     private void DrawSelection(Rect rect)
@@ -367,6 +411,21 @@ public partial class OverlayWindow : Window
         if (e.Key == Key.Escape)
         {
             Close();
+            return;
+        }
+
+        if (Keyboard.Modifiers != ModifierKeys.Control)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Z)
+        {
+            UndoBlur();
+        }
+        else if (e.Key == Key.Y)
+        {
+            RedoBlur();
         }
     }
 
