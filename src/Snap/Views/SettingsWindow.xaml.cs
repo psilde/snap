@@ -12,6 +12,7 @@ public partial class SettingsWindow : Window
 {
     private readonly SettingsService _settingsService;
     private readonly AppSettings _settings;
+    private readonly StartupService _startupService = new();
 
     public SettingsWindow(SettingsService settingsService, AppSettings settings)
     {
@@ -20,6 +21,7 @@ public partial class SettingsWindow : Window
         _settings = settings;
         FolderTextBox.Text = _settings.SaveFolder;
         CopyPathCheckBox.IsChecked = _settings.CopyPathOnSave;
+        LaunchAtStartupCheckBox.IsChecked = _startupService.IsEnabled();
 
         using var iconStream = Assembly.GetExecutingAssembly()
             .GetManifestResourceStream("Snap.Resources.app.ico");
@@ -48,6 +50,7 @@ public partial class SettingsWindow : Window
         _settings.SaveFolder = FolderTextBox.Text;
         _settings.CopyPathOnSave = CopyPathCheckBox.IsChecked ?? true;
         _settingsService.Save(_settings);
+        _startupService.SetEnabled(LaunchAtStartupCheckBox.IsChecked ?? false);
         Close();
     }
 
