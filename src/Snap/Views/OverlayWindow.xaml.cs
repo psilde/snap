@@ -166,9 +166,9 @@ public partial class OverlayWindow : Window
     {
         _toolbar = new CaptureToolbar();
         _toolbar.BlurClicked += OnBlurClicked;
-        _toolbar.CopyClicked += () => Export(copyToClipboard: true);
-        _toolbar.SaveClicked += () => Export(copyToClipboard: false);
-        _toolbar.CancelClicked += Close;
+        _toolbar.CopyClicked += () => { DisarmBlurMode(); Export(copyToClipboard: true); };
+        _toolbar.SaveClicked += () => { DisarmBlurMode(); Export(copyToClipboard: false); };
+        _toolbar.CancelClicked += () => { DisarmBlurMode(); Close(); };
 
         Canvas.SetLeft(_toolbar, selectionRect.X);
         Canvas.SetTop(_toolbar, selectionRect.Y + selectionRect.Height + 6);
@@ -177,7 +177,14 @@ public partial class OverlayWindow : Window
 
     private void OnBlurClicked()
     {
-        _blurModeArmed = true;
+        _blurModeArmed = !_blurModeArmed;
+        _toolbar?.SetBlurArmed(_blurModeArmed);
+    }
+
+    private void DisarmBlurMode()
+    {
+        _blurModeArmed = false;
+        _toolbar?.SetBlurArmed(false);
     }
 
     private void Export(bool copyToClipboard)

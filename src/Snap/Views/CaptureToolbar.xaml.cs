@@ -1,11 +1,14 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Snap.Views;
 
 public partial class CaptureToolbar : UserControl
 {
+    private static readonly Brush ArmedBrush = Brushes.DarkOrange;
+
     public event Action? BlurClicked;
     public event Action? CopyClicked;
     public event Action? SaveClicked;
@@ -14,6 +17,18 @@ public partial class CaptureToolbar : UserControl
     public CaptureToolbar()
     {
         InitializeComponent();
+    }
+
+    public void SetBlurArmed(bool armed)
+    {
+        if (armed)
+        {
+            BlurButton.Background = ArmedBrush;
+        }
+        else
+        {
+            BlurButton.ClearValue(BackgroundProperty);
+        }
     }
 
     private void BlurButton_Click(object sender, RoutedEventArgs e) => BlurClicked?.Invoke();
