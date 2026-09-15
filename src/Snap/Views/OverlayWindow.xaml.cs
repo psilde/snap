@@ -170,9 +170,23 @@ public partial class OverlayWindow : Window
         _toolbar.SaveClicked += () => { DisarmBlurMode(); Export(copyToClipboard: false); };
         _toolbar.CancelClicked += () => { DisarmBlurMode(); Close(); };
 
-        Canvas.SetLeft(_toolbar, selectionRect.X);
-        Canvas.SetTop(_toolbar, selectionRect.Y + selectionRect.Height + 6);
+        // Keep the toolbar above blur previews added later, since it may sit inside the selection.
+        Panel.SetZIndex(_toolbar, 1);
         RootCanvas.Children.Add(_toolbar);
+        _toolbar.UpdateLayout();
+
+        // Canvas coordinates are relative to the virtual desktop origin; monitor bounds are screen coordinates.
+        var selectionOnScreen = new Rectangle(
+            (int)selectionRect.X + _virtualBounds.Left,
+            (int)selectionRect.Y + _virtualBounds.Top,
+            (int)selectionRect.Width,
+            (int)selectionRect.Height);
+        var monitor = ToolbarPlacement.GetMonitorBounds(selectionOnScreen);
+        var toolbarSize = new System.Drawing.Size((int)Math.Ceiling(_toolbar.ActualWidth), (int)Math.Ceiling(_toolbar.ActualHeight));
+        var position = ToolbarPlacement.Calculate(selectionOnScreen, toolbarSize, monitor, gap: 6);
+
+        Canvas.SetLeft(_toolbar, position.X - _virtualBounds.Left);
+        Canvas.SetTop(_toolbar, position.Y - _virtualBounds.Top);
     }
 
     private void OnBlurClicked()
