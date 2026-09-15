@@ -38,7 +38,7 @@ flowchart LR
 - **Selective blur** — drop one or more blur boxes over anything to redact, each with an independently adjustable radius
 - **Copy or save** — send the composited image straight to the clipboard, or write it to disk as a timestamped PNG
 - **Tray-first design** — runs with no visible main window; New Capture and Settings are always one click away in the tray
-- **Configurable save folder** — defaults to `Documents\screen`, with an option to auto-copy the saved file's path to the clipboard
+- **Configurable save folder** — defaults to `Pictures\Snap`, with an option to auto-copy the saved file's path to the clipboard
 
 <br/>
 

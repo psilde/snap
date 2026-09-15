@@ -10,7 +10,7 @@ public class AppSettings
 
     public static string GetDefaultSaveFolder()
     {
-        var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        return Path.Combine(documents, "screen");
+        var pictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+        return Path.Combine(pictures, "Snap");
     }
 }
